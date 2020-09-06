@@ -10,7 +10,7 @@ For 1<= minutes <=30, use past, and for minutes > 30 use to.
 Note the space between the apostrophe and clock in o' clock.
 
 Constraints
-1 <= hour <= 12
+1 <= hour <= 23
 0 <= minute < 60
 *)
 

@@ -28,7 +28,7 @@ module TimeInWords =
 
         match minute with
         | Past -> toWord minute + " past " + hour.ToString()
-        | To -> failwith "Not implemented"
+        | To -> toWord (60 - minute) + " to " + (hour + 1).ToString()
         | Whole -> hour.ToString() + " o' clock"
 
 
@@ -39,6 +39,9 @@ module Tests =
     [<InlineData(5, 20, "20 past 5")>]
     [<InlineData(5, 15, "quarter past 5")>]
     [<InlineData(5, 30, "half past 5")>]
+    [<InlineData(5, 40, "20 to 6")>]
+    [<InlineData(5, 45, "quarter to 6")>]
+    [<InlineData(5, 50, "10 to 6")>]
     let ``timeToWords returns expected`` hour minute expected =
         let result = TimeInWords.timeToWords hour minute
         Assert.Equal(expected, result)

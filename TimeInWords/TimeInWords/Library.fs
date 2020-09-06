@@ -22,15 +22,19 @@ module TimeInWords =
             else if 1 <= minute && minute <= 30 then Past
             else To
 
-        let toWord minute =
+        let toWords minute =
+            let units =
+                if minute = 1 then "minute"
+                else "minutes"
+            
             if minute = 15 then "quarter"
             else if minute = 30 then "half"
-            else minute.ToString()
+            else minute.ToString() + " " + units 
 
         let toWords hour minute =
             match minute with
-            | Past -> toWord minute + " past " + hour.ToString()
-            | To -> toWord (60 - minute) + " to " + (hour + 1).ToString()
+            | Past -> toWords minute + " past " + hour.ToString()
+            | To -> toWords (60 - minute) + " to " + (hour + 1).ToString()
             | Whole -> hour.ToString() + " o' clock"
         
         if hour <= 12 then toWords hour minute
@@ -40,21 +44,22 @@ module TimeInWords =
 module Tests =
     [<Theory>]
     [<InlineData(5, 00, "5 o' clock")>]
-    [<InlineData(5, 10, "10 past 5")>]
-    [<InlineData(5, 20, "20 past 5")>]
+    [<InlineData(5, 01, "1 minute past 5")>]
+    [<InlineData(5, 10, "10 minutes past 5")>]
+    [<InlineData(5, 20, "20 minutes past 5")>]
     [<InlineData(5, 15, "quarter past 5")>]
     [<InlineData(5, 30, "half past 5")>]
-    [<InlineData(5, 40, "20 to 6")>]
+    [<InlineData(5, 40, "20 minutes to 6")>]
     [<InlineData(5, 45, "quarter to 6")>]
-    [<InlineData(5, 50, "10 to 6")>]
+    [<InlineData(5, 50, "10 minutes to 6")>]
     [<InlineData(17, 00, "5 o' clock")>]
-    [<InlineData(17, 10, "10 past 5")>]
-    [<InlineData(17, 20, "20 past 5")>]
+    [<InlineData(17, 10, "10 minutes past 5")>]
+    [<InlineData(17, 20, "20 minutes past 5")>]
     [<InlineData(17, 15, "quarter past 5")>]
     [<InlineData(17, 30, "half past 5")>]
-    [<InlineData(17, 40, "20 to 6")>]
+    [<InlineData(17, 40, "20 minutes to 6")>]
     [<InlineData(17, 45, "quarter to 6")>]
-    [<InlineData(17, 50, "10 to 6")>]
+    [<InlineData(17, 50, "10 minutes to 6")>]
     let ``timeToWords returns expected`` hour minute expected =
         let result = TimeInWords.timeToWords hour minute
         Assert.Equal(expected, result)

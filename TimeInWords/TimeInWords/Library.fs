@@ -22,7 +22,9 @@ module TimeInWords =
             else To
 
         let toWord minute =
-            if minute = 15 then "quarter" else minute.ToString()
+            if minute = 15 then "quarter"
+            else if minute = 30 then "half"
+            else minute.ToString()
 
         match minute with
         | Past -> toWord minute + " past " + hour.ToString()
@@ -36,6 +38,7 @@ module Tests =
     [<InlineData(5, 10, "10 past 5")>]
     [<InlineData(5, 20, "20 past 5")>]
     [<InlineData(5, 15, "quarter past 5")>]
+    [<InlineData(5, 30, "half past 5")>]
     let ``timeToWords returns expected`` hour minute expected =
         let result = TimeInWords.timeToWords hour minute
         Assert.Equal(expected, result)

@@ -21,15 +21,21 @@ module TimeInWords =
             if minute = 0 then Whole
             else if 1 <= minute && minute <= 30 then Past
             else To
+            
+        let (|Quarter|Half|Other|) minute =
+            if minute = 15 then Quarter
+            else if minute = 30 then Half
+            else Other
 
         let toWords minute =
             let units =
                 if minute = 1 then "minute"
                 else "minutes"
             
-            if minute = 15 then "quarter"
-            else if minute = 30 then "half"
-            else minute.ToString() + " " + units 
+            match minute with
+            | Quarter -> "quarter"
+            | Half -> "half"
+            | Other -> minute.ToString() + " " + units 
 
         let toWords hour minute =
             match minute with

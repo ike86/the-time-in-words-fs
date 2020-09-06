@@ -16,6 +16,7 @@ Constraints
 
 module TimeInWords =
     let timeToWords hour minute =
+
         let (|Past|To|Whole|) minute =
             if minute = 0 then Whole
             else if 1 <= minute && minute <= 30 then Past
@@ -26,10 +27,14 @@ module TimeInWords =
             else if minute = 30 then "half"
             else minute.ToString()
 
-        match minute with
-        | Past -> toWord minute + " past " + hour.ToString()
-        | To -> toWord (60 - minute) + " to " + (hour + 1).ToString()
-        | Whole -> hour.ToString() + " o' clock"
+        let toWords hour minute =
+            match minute with
+            | Past -> toWord minute + " past " + hour.ToString()
+            | To -> toWord (60 - minute) + " to " + (hour + 1).ToString()
+            | Whole -> hour.ToString() + " o' clock"
+        
+        if hour <= 12 then toWords hour minute
+        else toWords (hour - 12) minute
 
 
 module Tests =
@@ -42,6 +47,14 @@ module Tests =
     [<InlineData(5, 40, "20 to 6")>]
     [<InlineData(5, 45, "quarter to 6")>]
     [<InlineData(5, 50, "10 to 6")>]
+    [<InlineData(17, 00, "5 o' clock")>]
+    [<InlineData(17, 10, "10 past 5")>]
+    [<InlineData(17, 20, "20 past 5")>]
+    [<InlineData(17, 15, "quarter past 5")>]
+    [<InlineData(17, 30, "half past 5")>]
+    [<InlineData(17, 40, "20 to 6")>]
+    [<InlineData(17, 45, "quarter to 6")>]
+    [<InlineData(17, 50, "10 to 6")>]
     let ``timeToWords returns expected`` hour minute expected =
         let result = TimeInWords.timeToWords hour minute
         Assert.Equal(expected, result)

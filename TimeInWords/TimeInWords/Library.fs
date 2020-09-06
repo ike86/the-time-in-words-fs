@@ -18,20 +18,24 @@ module TimeInWords =
     let timeToWords hour minute =
         let (|Past|To|Whole|) minute =
             if minute = 0 then Whole
-            else if 1 <= minute && minute<= 30 then Past
+            else if 1 <= minute && minute <= 30 then Past
             else To
 
+        let toWord minute =
+            if minute = 15 then "quarter" else minute.ToString()
+
         match minute with
-        | Past -> minute.ToString() + " past " + hour.ToString()
+        | Past -> toWord minute + " past " + hour.ToString()
         | To -> failwith "Not implemented"
         | Whole -> hour.ToString() + " o' clock"
-        
+
 
 module Tests =
     [<Theory>]
-    [<InlineData (5, 00, "5 o' clock")>]
-    [<InlineData (5, 10, "10 past 5")>]
-    [<InlineData (5, 20, "20 past 5")>]
+    [<InlineData(5, 00, "5 o' clock")>]
+    [<InlineData(5, 10, "10 past 5")>]
+    [<InlineData(5, 20, "20 past 5")>]
+    [<InlineData(5, 15, "quarter past 5")>]
     let ``timeToWords returns expected`` hour minute expected =
         let result = TimeInWords.timeToWords hour minute
         Assert.Equal(expected, result)

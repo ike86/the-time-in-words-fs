@@ -8,6 +8,10 @@ Given the time in numerals we may convert it into words, as shown below:
 At minutes = 00, use o' clock.
 For 1<= minutes <=30, use past, and for minutes > 30 use to.
 Note the space between the apostrophe and clock in o' clock.
+
+Constraints
+1 <= hour <= 12
+0 <= minute < 60
 *)
 
 module TimeInWords =
